@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitAsFuk - Meal Plans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #2d4a3e;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* To account for fixed nav */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #2e7d32;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #2e7d32;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .section-title span {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Meal Plans */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .plan-content {
+            padding: 30px;
+        }
+
+        .plan-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .plan-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .plan-price small {
+            font-size: 0.5em;
+            color: #888;
+        }
+
+        .price-options {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .price-option {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .price-option.active, .price-option:hover {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-button {
+            width: 100%;
+            background: linear-gradient(45deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .plan-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Comparison Table */
+        .comparison-table-container {
+            overflow-x: auto;
+            margin-top: 60px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px; /* Ensure it's wide enough for mobile scroll */
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: #f0f8f0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comparison-table td {
+            color: #555;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table .feature-column {
+            font-weight: 600;
+            color: #2d4a3e;
+        }
+
+        .comparison-table .highlight {
+            background-color: #e6ffe6;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #4caf50;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #4caf50;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #888;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px; /* Adjust based on nav height */
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+                border-radius: 0 0 10px 10px;
+            }
+            .nav-menu.active {
+                display: flex;
+            }
+            .nav-menu li {
+                text-align: center;
+                margin: 10px 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">FitAsFuk</div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="meal_plans.html" class="nav-link">Meal Plans</a></li>
+                    <li><a href="technology.html" class="nav-link">Technology</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li> <!-- New Blog Link -->
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Meal Plans Section -->
+    <section id="plans" class="section" style="background: #f8f9ff;">
+        <div class="container">
+            <h2 class="section-title">Choose Your <span>FitAsFuk Plan</span></h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #666; max-width: 800px; margin: 0 auto 50px;">
+                Find the perfect personalized meal plan to match your health goals, budget, and lifestyle. Each plan is powered by our cutting-edge AI for optimal results.
+            </p>
+            <div class="plans-grid">
+                <!-- Weight Loss Plan -->
+                <div class="plan-card" id="weight-loss">
+                    <div class="plan-content">
+                        <h3>Weight Loss Plan</h3>
+                        <div class="price-options">
+                            <span class="price-option active" data-period="meal" data-price="$12.99">Per Meal</span>
+                            <span class="price-option" data-period="weekly" data-price="$85">Weekly</span>
+                            <span class="price-option" data-period="monthly" data-price="$320">Monthly</span>
+                        </div>
+                        <div class="plan-price" id="price-weight-loss">$12.99<small>/meal</small></div>
+                        <ul class="plan-features">
+                            <li>✓ Calorie-optimized meals for deficit</li>
+                            <li>✓ High protein, fiber-rich, low carb focus</li>
+                            <li>✓ Metabolic rate analysis & adjustment</li>
+                            <li>✓ Weekly progress tracking & AI insights</li>
+                            <li>✓ Balanced macro-nutrient ratios</li>
+                            <li>✓ Access to exclusive weight loss recipes</li>
+                        </ul>
+                        <button class="plan-button" onclick="alert('Proceeding to checkout for Weight Loss Plan.')">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Muscle Gain Plan -->
+                <div class="plan-card" id="muscle-gain">
+                    <div class="plan-content">
+                        <h3>Muscle Gain Plan</h3>
+                        <div class="price-options">
+                            <span class="price-option active" data-period="meal" data-price="$15.99">Per Meal</span>
+                            <span class="price-option" data-period="weekly" data-price="$105">Weekly</span>
+                            <span class="price-option" data-period="monthly" data-price="$400">Monthly</span>
+                        </div>
+                        <div class="plan-price" id="price-muscle-gain">$15.99<small>/meal</small></div>
+                        <ul class="plan-features">
+                            <li>✓ High-protein & complex carb optimization</li>
+                            <li>✓ Pre & post-workout meal timing</li>
+                            <li>✓ Essential muscle building nutrients</li>
+                            <li>✓ Performance tracking & recovery focus</li>
+                            <li>✓ Increased calorie intake for growth</li>
+                            <li>✓ Exclusive access to fitness articles</li>
+                        </ul>
+                        <button class="plan-button" onclick="alert('Proceeding to checkout for Muscle Gain Plan.')">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Balanced Office Plan -->
+                <div class="plan-card" id="balanced-office">
+                    <div class="plan-content">
+                        <h3>Balanced Office Plan</h3>
+                        <div class="price-options">
+                            <span class="price-option active" data-period="meal" data-price="$11.99">Per Meal</span>
+                            <span class="price-option" data-period="weekly" data-price="$79">Weekly</span>
+                            <span class="price-option" data-period="monthly" data-price="$290">Monthly</span>
+                        </div>
+                        <div class="plan-price" id="price-balanced-office">$11.99<small>/meal</small></div>
+                        <ul class="plan-features">
+                            <li>✓ Energy-sustaining, nutrient-dense meals</li>
+                            <li>✓ Brain-boosting & focus-enhancing ingredients</li>
+                            <li>✓ Easy office-friendly, ready-to-eat format</li>
+                            <li>✓ Stress-reducing & immunity-supporting foods</li>
+                            <li>✓ Perfectly portioned for desk-side convenience</li>
+                            <li>✓ Tips for healthy eating at work</li>
+                        </ul>
+                        <button class="plan-button" onclick="alert('Proceeding to checkout for Balanced Office Plan.')">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- AI Premium Plan -->
+                <div class="plan-card" id="ai-premium">
+                    <div class="plan-content">
+                        <h3>AI Premium Plan</h3>
+                        <div class="price-options">
+                            <span class="price-option active" data-period="meal" data-price="$19.99">Per Meal</span>
+                            <span class="price-option" data-period="weekly" data-price="$130">Weekly</span>
+                            <span class="price-option" data-period="monthly" data-price="$500">Monthly</span>
+                        </div>
+                        <div class="plan-price" id="price-ai-premium">$19.99<small>/meal</small></div>
+                        <ul class="plan-features">
+                            <li>✓ Fully personalized, adaptive AI meal planning</li>
+                            <li>✓ Real-time health monitoring & adjustments</li>
+                            <li>✓ Premium, specialty, and gourmet ingredients</li>
+                            <li>✓ Dedicated nutrition specialist support</li>
+                            <li>✓ Priority delivery & personalized app features</li>
+                            <li>✓ Unlimited meal customization options</li>
+                        </ul>
+                        <button class="plan-button" onclick="alert('Proceeding to checkout for AI Premium Plan.')">Get Started</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 100px;">Compare Our <span>Plans</span></h2>
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Weight Loss</th>
+                            <th>Muscle Gain</th>
+                            <th>Balanced Office</th>
+                            <th>AI Premium</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-column">AI Meal Customization</td>
+                            <td>Standard</td>
+                            <td>Standard</td>
+                            <td>Standard</td>
+                            <td class="highlight">Advanced & Adaptive</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Calorie Optimization</td>
+                            <td class="highlight">High</td>
+                            <td>Medium</td>
+                            <td>Medium</td>
+                            <td class="highlight">Precise</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Protein Focus</td>
+                            <td class="highlight">High</td>
+                            <td class="highlight">Very High</td>
+                            <td>Medium</td>
+                            <td class="highlight">Optimized</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Macro Tracking</td>
+                            <td>Basic</td>
+                            <td>Basic</td>
+                            <td>Basic</td>
+                            <td class="highlight">Detailed</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Ingredient Sourcing</td>
+                            <td>Quality</td>
+                            <td>Quality</td>
+                            <td>Quality</td>
+                            <td class="highlight">Premium & Specialty</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Health Coaching Access</td>
+                            <td>Email Support</td>
+                            <td>Email Support</td>
+                            <td>Email Support</td>
+                            <td class="highlight">Dedicated Specialist</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Progress Analytics</td>
+                            <td>Basic App Data</td>
+                            <td>Basic App Data</td>
+                            <td>Basic App Data</td>
+                            <td class="highlight">In-depth App Insights</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Delivery Frequency</td>
+                            <td>Weekly</td>
+                            <td>Weekly</td>
+                            <td>Weekly</td>
+                            <td class="highlight">Flexible (Daily/Weekly)</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Price Per Meal (approx.)</td>
+                            <td>$12.99</td>
+                            <td>$15.99</td>
+                            <td>$11.99</td>
+                            <td class="highlight">$19.99</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Weekly Cost (approx.)</td>
+                            <td>$85</td>
+                            <td>$105</td>
+                            <td>$79</td>
+                            <td class="highlight">$130</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-column">Monthly Cost (approx.)</td>
+                            <td>$320</td>
+                            <td>$400</td>
+                            <td>$290</td>
+                            <td class="highlight">$500</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="blog.html">Nutrition Blog</a>
+                    <a href="faq.html">FAQ</a> 
+                    <a href="delivery_policy.html">Delivery Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="about.html#team">Our Team</a>
+                    <a href="about.html#partners">Partners</a>
+                    <a href="contact.html">Careers</a>
+                </div>
+                <!-- New Contact Info Section in Footer -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p style="margin-bottom: 10px;">📧 <a href="mailto:hello@fitasfuk.com" style="color: white; text-decoration: none;">hello@fitasfuk.com</a></p>
+                    <p style="margin-bottom: 10px;">📞 <a href="tel:1800FITASFUK" style="color: white; text-decoration: none;">1-800-FIT-AS-FUK</a></p>
+                    <div class="social-links" style="margin-top: 20px;">
+                        <a href="#" aria-label="Facebook" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn" style="color: white; font-size: 1.5rem;"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitAsFuk. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(255, 255, 255, 0.98)';
+                nav.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when a link is clicked
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Price option toggling
+        document.querySelectorAll('.price-options').forEach(optionsContainer => {
+            optionsContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('price-option')) {
+                    // Remove 'active' from all siblings
+                    Array.from(this.children).forEach(option => option.classList.remove('active'));
+                    // Add 'active' to the clicked option
+                    event.target.classList.add('active');
+
+                    // Update the displayed price
+                    const newPrice = event.target.dataset.price;
+                    const priceDisplayId = 'price-' + this.closest('.plan-card').id;
+                    const priceDisplayElement = document.getElementById(priceDisplayId);
+                    const periodText = event.target.dataset.period;
+                    priceDisplayElement.innerHTML = `${newPrice}<small>/${periodText}</small>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

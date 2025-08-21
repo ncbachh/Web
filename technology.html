@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitAsFuk - Our Technology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #2d4a3e;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding-top: 80px; /* To account for fixed nav */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #2e7d32;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #2e7d32;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .section-title span {
+            background: linear-gradient(45deg, #2e7d32, #1b5e20);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Technology Section specifics */
+        .tech-section {
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e8);
+        }
+
+        .tech-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .tech-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .tech-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .tech-content p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .tech-visual {
+            text-align: center;
+            font-size: 8rem;
+            opacity: 0.8;
+            color: #2e7d32;
+        }
+
+        .tech-list {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .tech-list li {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .tech-list li::before {
+            content: '✓';
+            color: #4caf50;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #4caf50;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #4caf50;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #888;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px; /* Adjust based on nav height */
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+                border-radius: 0 0 10px 10px;
+            }
+            .nav-menu.active {
+                display: flex;
+            }
+            .nav-menu li {
+                text-align: center;
+                margin: 10px 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .tech-block {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .tech-visual {
+                font-size: 4rem;
+                order: -1; /* Puts visual first on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">FitAsFuk</div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="meal_plans.html" class="nav-link">Meal Plans</a></li>
+                    <li><a href="technology.html" class="nav-link">Technology</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li> <!-- New Blog Link -->
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+                </ul>
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Technology Section -->
+    <section id="technology" class="section tech-section">
+        <div class="container">
+            <h2 class="section-title">The <span>FitAsFuk</span> Technology Advantage</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #666; max-width: 900px; margin: 0 auto 80px;">
+                At FitAsFuk, we're more than just a meal delivery service; we're a cutting-edge technology company revolutionizing personal nutrition. Our intelligent systems are designed from the ground up to provide unparalleled customization, efficiency, and deliciousness.
+            </p>
+
+            <div class="tech-block" id="personalized-meal-planning">
+                <div class="tech-content">
+                    <h3>AI-Driven Personalized Meal Planning</h3>
+                    <p>Our core innovation lies in our sophisticated AI algorithm, which acts as your personal nutritionist. It dives deep into your unique data to craft meal plans that are not just healthy, but perfectly aligned with your individual needs and preferences.</p>
+                    <p><strong>How it works:</strong></p>
+                    <ul class="tech-list">
+                        <li><strong>Comprehensive Data Analysis:</strong> The algorithm ingests a vast array of information, including your current eating habits (from questionnaires or connected apps), specific health goals (e.g., weight loss, muscle gain, energy optimization, managing conditions like diabetes), and detailed nutritional needs (macro/micronutrient requirements, allergies, intolerances).</li>
+                        <li><strong>Flavor & Preference Integration:</strong> Beyond pure nutrition, our AI learns your taste preferences. Do you love spicy food? Prefer plant-based proteins? Have a sweet tooth? The system continuously refines its suggestions to balance scientifically backed nutrition with appealing flavors you'll genuinely enjoy, minimizing diet fatigue.</li>
+                        <li><strong>Dynamic Adaptation:</strong> Your body and goals evolve, and so does your meal plan. Our algorithm continuously adapts based on your feedback (e.g., meal ratings, satiety levels), progress data (e.g., weight, energy levels), and even external factors like seasonal ingredient availability. This ensures your plan is always optimal and never static.</li>
+                        <li><strong>Scientific Backbone:</strong> Every recommendation is rooted in the latest nutritional science. Our team of registered dietitians and food scientists constantly updates the AI's knowledge base to ensure the highest standards of health and efficacy.</li>
+                    </ul>
+                </div>
+                <div class="tech-visual">📊</div>
+            </div>
+
+            <div class="tech-block" id="smart-supply-chain">
+                <div class="tech-visual">🚚</div>
+                <div class="tech-content">
+                    <h3>Smart Supply Chain & Logistics</h3>
+                    <p>Delivering fresh, high-quality meals on time requires more than just good intentions. FitAsFuk employs an intelligent, data-driven supply chain and logistics platform to ensure peak freshness, efficiency, and sustainability from farm to table.</p>
+                    <p><strong>Here’s how our smart supply chain works:</strong></p>
+                    <ul class="tech-list">
+                        <li><strong>Predictive Inventory Management:</strong> Our platform utilizes advanced predictive modeling to forecast demand for specific ingredients and meals. This allows us to precisely order what we need from our network of trusted suppliers and local farms, significantly reducing food waste. Ingredients are sourced just-in-time for meal preparation.</li>
+                        <li><strong>Automated Production Scheduling:</strong> Based on personalized meal orders and ingredient availability, our system optimizes production schedules in our kitchens. This ensures that meals are prepared efficiently, cooked to perfection, and immediately chilled to preserve freshness and nutritional value.</li>
+                        <li><strong>Optimized Delivery Routes:</strong> Gone are the days of inefficient delivery routes. Our logistics platform uses real-time traffic data, order density, and delivery window preferences to create the most efficient delivery routes. This not only ensures timely arrival of your meals but also minimizes fuel consumption and our carbon footprint.</li>
+                        <li><strong>Quality Assurance & Traceability:</strong> From the moment ingredients enter our facility to the final delivery at your doorstep, every step is meticulously tracked and monitored. Our system ensures strict adherence to food safety standards and allows for full traceability of all ingredients, guaranteeing quality and peace of mind.</li>
+                        <li><strong>Feedback Loop for Improvement:</strong> Data collected from delivery times, freshness reports, and customer satisfaction feeds back into the system, continuously optimizing our logistics and supply chain processes for even greater efficiency and improved customer experience.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tech-block" id="ordering-app-system">
+                <div class="tech-content">
+                    <h3>Seamless Ordering & Engagement App</h3>
+                    <p>Your journey with FitAsFuk is managed through our intuitive, powerful mobile application and web platform. This is where personalized nutrition meets daily convenience, putting you in control.</p>
+                    <p><strong>What the app offers:</strong></p>
+                    <ul class="tech-list">
+                        <li><strong>Effortless Meal Selection:</strong> Browse your personalized weekly meal recommendations, swap meals based on your cravings, or easily skip a delivery if needed. The interface is designed for simplicity and speed.</li>
+                        <li><strong>Progress Tracking & Insights:</strong> Log your activities, track your weight, energy levels, and more. The app provides visual dashboards and actionable insights generated by your personalized AI, showing you how your meals are contributing to your goals.</li>
+                        <li><strong>Personalized Feedback Mechanism:</strong> Provide ratings and feedback on each meal. This data is crucial for our AI to learn your evolving preferences and adapt your future meal plans even more precisely.</li>
+                        <li><strong>Nutritional Transparency:</strong> Access detailed nutritional information for every meal, including macronutrient breakdowns, calorie counts, and ingredient lists. Understand exactly what you're eating.</li>
+                        <li><strong>Customer Support Integration:</strong> Have a question or need to adjust your plan? Our in-app support chat connects you directly with our customer service team and nutrition specialists, ensuring you always have the support you need.</li>
+                    </ul>
+                </div>
+                <div class="tech-visual">📱</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="blog.html">Nutrition Blog</a>
+                    <a href="faq.html">FAQ</a> 
+                    <a href="delivery_policy.html">Delivery Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="about.html#team">Our Team</a>
+                    <a href="about.html#partners">Partners</a>
+                    <a href="contact.html">Careers</a>
+                </div>
+                <!-- New Contact Info Section in Footer -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p style="margin-bottom: 10px;">📧 <a href="mailto:hello@fitasfuk.com" style="color: white; text-decoration: none;">hello@fitasfuk.com</a></p>
+                    <p style="margin-bottom: 10px;">📞 <a href="tel:1800FITASFUK" style="color: white; text-decoration: none;">1-800-FIT-AS-FUK</a></p>
+                    <div class="social-links" style="margin-top: 20px;">
+                        <a href="#" aria-label="Facebook" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter" style="color: white; font-size: 1.5rem; margin-right: 15px;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn" style="color: white; font-size: 1.5rem;"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitAsFuk. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(255, 255, 255, 0.98)';
+                nav.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when a link is clicked
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
